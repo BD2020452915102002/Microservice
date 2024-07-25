@@ -1,8 +1,9 @@
 const {userController} = require("../controller");
 const userApi = (app, container) => {
     const {version} = container.resolve('serverSettings')
-    app.post(`/api/${version}/user/register`,userController(container).register)
-    app.post(`/api/${version}/user/login`,userController(container).login)
+    const {register, login} = userController(container)
+    app.post(`/api/${version}/user/register`,register)
+    app.post(`/api/${version}/user/login`,login)
 }
 
 module.exports = {userApi}

@@ -6,6 +6,7 @@ const {postApi} = require("../api/post.api");
 const start = (container)=>{
     return new Promise((resolve,reject)=>{
         const {port}  = container.resolve('serverSettings')
+        const {validateToken}  = container.resolve('serverHelper')
         const repo = container.resolve('repo')
         if (!repo) {
             reject(new Error('The server must be started with a connected repository'))
@@ -19,6 +20,14 @@ const start = (container)=>{
         app.use(bodyParser.json())
         app.use(bodyParser.urlencoded({ extended: false }))
         app.use(helmet())
+        app.use((req, res, next) => {
+            if (req.headers.authorization) {
+                const token = req.headers.authorization.split(' ')[1]
+                console.log('aaaaaa',token)
+                req.user = validateToken(token)
+            }
+            next()
+        })
         postApi(app, container)
         const server = app.listen(port, () => resolve(server))
     })
