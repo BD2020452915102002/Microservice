@@ -1,8 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
-const {userApi} = require("../api/user.api");
-const bodyParser = require("body-parser");
+const {userApi} = require("../api/user.api")
+const bodyParser = require("body-parser")
 const start = (container)=>{
     return new Promise((resolve,reject)=>{
         const {port}  = container.resolve('serverSettings')

@@ -11,7 +11,6 @@ const schemaValidator = (userData)=>{
         if(error) {
             reject(new Error(`invalid user schema: ${error}`))
         }
-        console.info(value)
         resolve(value)
     })
 }

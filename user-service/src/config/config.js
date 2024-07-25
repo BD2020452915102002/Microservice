@@ -4,7 +4,7 @@ const dbSettings = {
 }
 
 const serverSettings = {
-    port: process.env.PORT || 8888,
+    port: process.env.PORT || 5001,
     shaKey: process.env.SHAKEY || '123abc@',
     version: 'v1',
 }
@@ -12,11 +12,6 @@ const serverSettings = {
 const serverHelper =  () => {
     const jwt = require('jsonwebtoken')
     const { shaKey } = serverSettings
-    console.log('vaoday')
-    function encodePassword (pass) {
-        console.log('aaaaa')
-        return pass
-    }
 
     function validateToken (token) {
         try {
@@ -30,6 +25,6 @@ const serverHelper =  () => {
         return jwt.sign( user , shaKey, { expiresIn: '24h' })
     }
 
-    return { encodePassword, validateToken, getUserToken }
+    return {  validateToken, getUserToken }
 }
 module.exports = { dbSettings, serverSettings , serverHelper: serverHelper()}

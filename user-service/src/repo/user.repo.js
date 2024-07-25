@@ -2,11 +2,9 @@ module.exports = function (mongoClient) {
     const addUser = async (user,passwordTool) => {
         const { username, name, isAdmin, createTime, password } = user;
         try {
-            console.log('createTime',createTime)
             const userExists = await checkUserExists(user);
             if (!userExists) {
                 const hashedPassword = await passwordTool.hash(password)
-                console.log(hashedPassword)
                 const result = await mongoClient.collection('users').insertOne({
                     username,
                     name,

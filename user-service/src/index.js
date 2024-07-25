@@ -37,6 +37,5 @@ mediator.on('di.ready', container => {
     start(container).then(app =>{
         console.log('Server start at port', app.address().port)
     })
-
 })
 
