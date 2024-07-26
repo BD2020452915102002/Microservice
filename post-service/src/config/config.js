@@ -17,7 +17,7 @@ const serverHelper =  () => {
         try {
             return jwt.verify(token, shaKey)
         } catch (e) {
-            return null
+            throw new Error('Token is invalid.')
         }
     }
 

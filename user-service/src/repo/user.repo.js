@@ -46,7 +46,7 @@ module.exports = function (mongoClient) {
                 throw new Error("User does not exist")
             }
         } catch (err) {
-            throw err;
+            throw err
         }
     };
 

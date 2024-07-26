@@ -1,5 +1,5 @@
 const {config} = require('./config')
-const {connectDb} = require('./database')
+const {connectDb, ObjectId} = require('./database')
 const {initDI} = require("./di");
 const EventEmitter = require('events').EventEmitter
 const models = require('./models')
@@ -24,7 +24,7 @@ mediator.on('DB connected', db =>{
     initDI({
         dbSettings,
         serverSettings,
-        repo: repo.connectRepo(db),
+        repo: repo.connectRepo(db, { ObjectId }),
         models,
         serverHelper,
     }, mediator)
