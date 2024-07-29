@@ -1,4 +1,4 @@
-const res = require("express/lib/response");
+
 module.exports = (mongoClient, {ObjectId}) => {
     const addPost = async (postData) => {
         let {categories, owner} = postData
@@ -9,8 +9,6 @@ module.exports = (mongoClient, {ObjectId}) => {
         } catch (e) {
             throw new Error('Failed to insert post data')
         }
-    }
-    const removePost = async () => {
     }
     const getPostById = async (idPost) => {
         try {
@@ -52,8 +50,8 @@ module.exports = (mongoClient, {ObjectId}) => {
             console.log(updateDoc)
             return await mongoClient.collection('posts').updateOne({_id: new ObjectId(id)}, {$set : updateDoc})
         }catch(err) {
-            return res.status(400).json({error: err.message})
+            throw err
         }
     }
-    return {addPost, removePost, getPostById, getPostByUserId, getPostByCategoryId, deletePost, updatePost}
+    return {addPost, getPostById, getPostByUserId, getPostByCategoryId, deletePost, updatePost}
 }
