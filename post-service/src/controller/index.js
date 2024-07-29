@@ -40,7 +40,7 @@ const postController = (container) => {
         const id = req.params.id
         try {
             const postData = await postRepo.getPostByUserId(id)
-            if(postData === null){
+            if(postData === null || postData === undefined || postData.length  === 0) {
                 return  res.status(404).send('Not found post')
             }
             return res.status(200).send(postData)
@@ -52,7 +52,7 @@ const postController = (container) => {
         const id = req.params.id
         try {
             const postData = await postRepo.getPostByCategoryId(id)
-            if(postData === null){
+            if(postData === null || postData === undefined || postData.length  === 0){
                 return  res.status(404).send('Not found post')
             }
             return res.status(200).send(postData)
@@ -60,6 +60,45 @@ const postController = (container) => {
             return res.status(400).json({error: err.message})
         }
     }
-    return {addPost, getPostById, getPostByUserId , getPostByCategoryId}
+    const deletePost = async (req, res) => {
+        const id = req.params.id
+        if (!req.user) {
+            return res.status(401).send("Authentication is required and has failed or has not yet been provided")
+        }
+        try {
+            const postData = await postRepo.getPostById(id)
+            if(postData === null){
+                return  res.status(404).send('Not found post want to delete')
+            }
+            await postRepo.deletePost(id)
+            return res.status(200).send(`post with id:${id} successfully deleted`)
+        }catch(err) {
+            return res.status(400).json({error: err.message})
+        }
+    }
+    const updatePost = async (req, res) => {
+        if (!req.user) {
+            return res.status(401).send("Authentication is required and has failed or has not yet been provided")
+        }
+        const { id } = req.params
+        const { content, title, categories, description} = req.body
+        const updateFields = {}
+        if (title) updateFields.title = title;
+        if (content) updateFields.content = content;
+        if (categories) updateFields.categories = categories;
+        if (description) updateFields.description = description;
+
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(401).send('Not found post want to update')
+        }
+        try {
+            await postRepo.updatePost(id, updateFields)
+            return res.status(200).send('updated post')
+
+        }catch(err) {
+            return res.status(400).json({error: err.message})
+        }
+    }
+    return {addPost, getPostById, getPostByUserId , deletePost, getPostByCategoryId, updatePost}
 }
 module.exports = {postController}

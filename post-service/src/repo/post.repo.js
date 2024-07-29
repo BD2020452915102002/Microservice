@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 module.exports = (mongoClient, {ObjectId}) => {
     const addPost = async (postData) => {
         let {categories, owner} = postData
@@ -27,14 +28,32 @@ module.exports = (mongoClient, {ObjectId}) => {
     }
     const getPostByCategoryId = async (categoryId) => {
         try {
-            return await mongoClient.collection('posts').find({categories: {$in: [categoryId]}}).toArray()
+            return await mongoClient.collection('posts').find({categories: {$in: [new ObjectId(categoryId)]}}).toArray()
         } catch (err) {
             throw err
         }
     }
-    const deletePost = async () => {
+    const deletePost = async (id) => {
+        try {
+            await mongoClient.collection('posts').deleteOne({_id: new ObjectId(id)})
+        }catch(err) {
+            throw err
+        }
     }
-    const updatePost = async () => {
+    const updatePost = async (id,updateFields) => {
+        const updateDoc = {};
+        if (updateFields) {
+            for (const [key, value] of Object.entries(updateFields)) {
+                updateDoc[key] = value
+            }
+        } else throw new Error('Updated post content is empty')
+
+        try {
+            console.log(updateDoc)
+            return await mongoClient.collection('posts').updateOne({_id: new ObjectId(id)}, {$set : updateDoc})
+        }catch(err) {
+            return res.status(400).json({error: err.message})
+        }
     }
     return {addPost, removePost, getPostById, getPostByUserId, getPostByCategoryId, deletePost, updatePost}
 }
